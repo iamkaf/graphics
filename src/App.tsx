@@ -1,31 +1,41 @@
-import { type ComponentType, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { Box, Image } from "lucide-react";
 import PixiDemo from "./demos/PixiDemo";
+import PixiGridPainterDemo from "./demos/PixiGridPainterDemo";
 import ThreeDemo from "./demos/ThreeDemo";
 
 const DEMOS = [
   {
     id: "pixi",
     title: "Pixi Hello World",
+    icon: Image,
+    iconClassName: "text-cyan-600",
     component: PixiDemo,
     notes: "A simple 2D scene with a rotating square and ticker updates from pixi.js.",
   },
   {
+    id: "pixi-grid",
+    title: "Pixi Grid Painter",
+    icon: Image,
+    iconClassName: "text-emerald-600",
+    component: PixiGridPainterDemo,
+    notes:
+      "A grid-based map editor where you can choose blocks and paint directly onto the tile map.",
+  },
+  {
     id: "three",
     title: "Three Hello World",
+    icon: Box,
+    iconClassName: "text-purple-600",
     component: ThreeDemo,
     notes: "A simple 3D scene with a rotating mesh, camera, and animation loop.",
   },
-] as const satisfies readonly {
-  id: string;
-  title: string;
-  component: ComponentType;
-  notes: string;
-}[];
+];
 
 type Demo = (typeof DEMOS)[number];
-type DemoId = Demo["id"];
+const demoMap = Object.fromEntries(DEMOS.map((d) => [d.id, d])) as Record<string, Demo>;
 
-const demoMap = Object.fromEntries(DEMOS.map((d) => [d.id, d])) as Record<DemoId, Demo>;
+type DemoId = Demo["id"];
 
 function App() {
   const [activeDemo, setActiveDemo] = useState<DemoId>("pixi");
@@ -56,7 +66,12 @@ function App() {
                       : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100"
                   }`}
                 >
-                  {demo.title}
+                  <span className="inline-flex items-center gap-2">
+                    <demo.icon
+                      className={`h-4 w-4 ${activeDemo === demo.id ? "text-white" : demo.iconClassName}`}
+                    />
+                    <span>{demo.title}</span>
+                  </span>
                 </button>
               </li>
             ))}

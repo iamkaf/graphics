@@ -1,6 +1,7 @@
 import { Application, extend, useApplication, useTick } from "@pixi/react";
 import { Container, Graphics, type Ticker } from "pixi.js";
 import { useCallback, useRef, useState } from "react";
+import FpsCounter from "../components/FpsCounter";
 
 extend({ Container, Graphics });
 
@@ -19,10 +20,9 @@ function RotatingShapes() {
 
   useTick(
     useCallback(() => {
-      if (groupRef.current) {
-        groupRef.current.x = app.screen.width / 2;
-        groupRef.current.y = app.screen.height / 2;
-      }
+      if (!groupRef.current) return;
+      groupRef.current.x = app.screen.width / 2;
+      groupRef.current.y = app.screen.height / 2;
     }, [app]),
   );
 
@@ -48,7 +48,7 @@ export default function PixiDemo() {
   return (
     <div
       ref={setContainer}
-      className="demo-canvas border border-slate-300 bg-slate-900"
+      className="demo-canvas relative border border-slate-300 bg-slate-900"
       aria-label="Pixi.js demo canvas container"
     >
       {container && (
@@ -56,6 +56,7 @@ export default function PixiDemo() {
           <RotatingShapes />
         </Application>
       )}
+      <FpsCounter />
     </div>
   );
 }

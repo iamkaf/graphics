@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
+import FpsCounter from "../components/FpsCounter";
 
 function RotatingBox() {
   const ref = useRef<THREE.Mesh>(null);
@@ -23,15 +24,18 @@ function RotatingBox() {
 
 export default function ThreeDemo() {
   return (
-    <Canvas
-      camera={{ position: [1.6, 1.2, 3.2], fov: 60 }}
-      style={{ width: "100%", height: "100%" }}
-      aria-label="Three.js demo canvas"
-    >
-      <color attach="background" args={["#f1f5f9"]} />
-      <directionalLight position={[2, 4, 4]} intensity={1} />
-      <ambientLight intensity={0.6} color="#91a1af" />
-      <RotatingBox />
-    </Canvas>
+    <div className="demo-canvas relative border border-slate-300">
+      <Canvas
+        camera={{ position: [1.6, 1.2, 3.2], fov: 60 }}
+        style={{ width: "100%", height: "100%" }}
+        aria-label="Three.js demo canvas"
+      >
+        <color attach="background" args={["#f1f5f9"]} />
+        <directionalLight position={[2, 4, 4]} intensity={1} />
+        <ambientLight intensity={0.6} color="#91a1af" />
+        <RotatingBox />
+      </Canvas>
+      <FpsCounter />
+    </div>
   );
 }

@@ -8,12 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "format": "oxfmt --write .",
+    "typecheck": "tsc -b",
     "preview": "vite preview"
   },
   "dependencies": {
     "@pixi/react": "^8.0.5",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.0",
+    "lucide-react": "^1.8.0",
     "pixi.js": "^8.18.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
