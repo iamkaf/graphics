@@ -1,0 +1,83 @@
+import { type ComponentType, useMemo, useState } from "react";
+import PixiDemo from "./demos/PixiDemo";
+import ThreeDemo from "./demos/ThreeDemo";
+
+const DEMOS = [
+  {
+    id: "pixi",
+    title: "Pixi Hello World",
+    component: PixiDemo,
+    notes: "A simple 2D scene with a rotating square and ticker updates from pixi.js.",
+  },
+  {
+    id: "three",
+    title: "Three Hello World",
+    component: ThreeDemo,
+    notes: "A simple 3D scene with a rotating mesh, camera, and animation loop.",
+  },
+] as const satisfies readonly {
+  id: string;
+  title: string;
+  component: ComponentType;
+  notes: string;
+}[];
+
+type Demo = (typeof DEMOS)[number];
+type DemoId = Demo["id"];
+
+const demoMap = Object.fromEntries(DEMOS.map((d) => [d.id, d])) as Record<DemoId, Demo>;
+
+function App() {
+  const [activeDemo, setActiveDemo] = useState<DemoId>("pixi");
+  const active = demoMap[activeDemo];
+  const DemoComponent = useMemo(() => active.component, [active.component]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <header className="h-16 border-b border-slate-300 bg-white px-4 py-3">
+        <h1 className="text-2xl font-medium">Graphics experiments</h1>
+      </header>
+
+      <div className="grid h-[calc(100svh-4rem)] grid-cols-1 overflow-hidden lg:grid-cols-[240px_minmax(0,1fr)]">
+        <aside className="border-b border-slate-300 bg-white p-4 lg:border-b-0 lg:border-r">
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-slate-500">
+            Demo menu
+          </h2>
+          <ul className="space-y-2">
+            {DEMOS.map((demo) => (
+              <li key={demo.id}>
+                <button
+                  type="button"
+                  onClick={() => setActiveDemo(demo.id)}
+                  aria-current={activeDemo === demo.id || undefined}
+                  className={`w-full border px-3 py-2 text-left text-sm transition-colors ${
+                    activeDemo === demo.id
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100"
+                  }`}
+                >
+                  {demo.title}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        <main className="flex min-h-0 flex-col p-4">
+          <section className="border border-slate-300 bg-white p-3">
+            <p className="mb-1 text-xs uppercase tracking-wide text-slate-500">
+              Active engine: {active.id}.js
+            </p>
+            <p className="text-sm text-slate-700">{active.notes}</p>
+          </section>
+
+          <section className="mt-4 min-h-0 flex-1 border border-slate-300 bg-white p-2">
+            <DemoComponent key={activeDemo} />
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+export default App;
